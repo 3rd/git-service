@@ -1,11 +1,10 @@
 # git-service
 
-> Warning: I'm **(very)** new to Rust, and using this is probably not a good idea enough for any serious
-> usecase at this moment. But yes, I use it.
+> Warning: I'm **(very)** new to Rust, and using this for any serious use case is probably not a good idea. But yes, I use it.
 
 ## Description
 
-This service exposes a webhook (`/update`) that will pull the latest changes of a git
+This service exposes a webhook (`/update`), that will pull the latest changes of a git
 repository. It's made to be extended by other routes that operate on the
 repository.
 
@@ -35,6 +34,6 @@ PORT=3000
 - if the repository does not exits at the specified `CLONE_PATH`, it will be
   cloned
 - a clone/pull will always happen on start
-- too debug, launch with `DEBUG=level`, where `level` is one of `debug`,
+- to debug, launch with `DEBUG=level`, where `level` is one of `debug`,
   `trace`, `info`, `error`
 
