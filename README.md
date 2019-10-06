@@ -1,6 +1,9 @@
 # git-service
 
-> Warning: I'm **(very)** new to Rust, and using this for any serious use case is probably not a good idea. But yes, I use it.
+| ⚠️ WARNING: Do not expose this to The Internet, unless you're ok with people rooting your box. |
+| --- |
+
+> Warning #2: I'm **(very)** new to Rust, and using this for any serious use case is probably not a good idea. But yes, I use it.
 
 ## Description
 
