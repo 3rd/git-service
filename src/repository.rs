@@ -114,8 +114,8 @@ impl GitRepository {
             .repo
             .remotes()?
             .iter()
-            .filter(|remote| remote.is_some())
-            .map(|remote| String::from(remote.unwrap()))
+            .filter_map(|remote| remote)
+            .map(|remote| remote.to_string())
             .collect();
         Ok(remotes)
     }
@@ -126,15 +126,11 @@ impl GitRepository {
         let remote_names = self.get_remote_names()?;
         let remotes: Vec<_> = remote_names
             .iter()
-            .map(|remote| self.find_remote(remote))
-            .filter(|remote| remote.is_ok())
-            .map(|remote| {
-                let remote = remote.unwrap();
-                GitRemote {
-                    name: remote.name().map(String::from),
-                    url: remote.url().map(String::from),
-                    push_url: remote.pushurl().map(String::from),
-                }
+            .filter_map(|remote| self.find_remote(remote).ok())
+            .map(|remote| GitRemote {
+                name: remote.name().map(String::from),
+                url: remote.url().map(String::from),
+                push_url: remote.pushurl().map(String::from),
             })
             .collect();
         Ok(remotes)
@@ -144,18 +140,15 @@ impl GitRepository {
         let branches: Vec<_> = self
             .repo
             .branches(None)?
-            .filter(|branch| branch.is_ok())
-            .map(|branch| branch.unwrap())
+            .filter_map(|branch| branch.ok())
             .filter(|branch| branch.1 == branch_type)
             .map(|branch| branch.0)
             .collect();
         let branch_names: Vec<_> = branches
             .iter()
-            .map(|branch| branch.name())
-            .filter(|name| name.is_ok())
-            .map(|name| name.unwrap())
-            .filter(|name| name.is_some())
-            .map(|name| name.unwrap().to_string())
+            .filter_map(|branch| branch.name().ok())
+            .filter_map(|name| name)
+            .map(|name| name.to_string())
             .collect();
         Ok(branch_names)
     }

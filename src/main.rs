@@ -16,6 +16,7 @@ mod router;
 fn main() -> Result<(), Error> {
     pretty_env_logger::init_custom_env("DEBUG");
 
+    // read env vars
     let remote = env!("REMOTE", "$REMOTE not found");
     let branch = env!("BRANCH", "$BRANCH not found");
     let clone_path = env!("CLONE_PATH", "$CLONE_PATH not found");
@@ -27,6 +28,7 @@ fn main() -> Result<(), Error> {
     info!("  clone_path = {}", clone_path);
     info!("  port = {}", port);
 
+    // open or clone repo
     let mut repo = GitRepository::open(&clone_path);
     if repo.is_ok() {
         info!("Opened repository");
@@ -38,10 +40,13 @@ fn main() -> Result<(), Error> {
     }
     let repo = Arc::new(Mutex::new(repo?));
 
+    // create hyper service
     let service = move || {
         let repo = repo.clone();
         service_fn_ok(move |req: Request<Body>| router::handle_request(req, &repo))
     };
+
+    // start server
     let addr: SocketAddr = format!("127.0.0.1:{}", port)
         .parse()
         .expect("Could not parse port, invalid input");
