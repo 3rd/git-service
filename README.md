@@ -7,9 +7,19 @@
 
 ## Description
 
-This service exposes a webhook (`/update`), that will pull the latest changes of a git
-repository. It's made to be extended by other routes that operate on the
-repository.
+This is a web service that runs on top of a git repository and exposes routes that fetch information from the repository / perform actions.
+
+All the responses are in JSON.
+
+Routes:
+
+- `/remotes` lists remotes
+- `/branches/local` lists local branches
+- `/branches/remote` lists remote branches
+- `/branch/:name` outputs the last commit id for this branch (for now)
+- `/branch/:name/checkout` performs a checkout
+- `/branch/:name/fetch` performs a fetch
+- `/branch/:name/pull` performs a pull
 
 ## Why
 
@@ -36,7 +46,7 @@ PORT=3000
 
 - if the repository does not exits at the specified `CLONE_PATH`, it will be
   cloned
-- a clone/pull will always happen on start
+- a clone/pull will always happen on start, if neither are successful the service **will crash**
 - to debug, launch with `DEBUG=level`, where `level` is one of `debug`,
   `trace`, `info`, `error`
 
